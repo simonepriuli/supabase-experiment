@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 
 import { api } from "@/utils/api";
 
 const Home: NextPage = () => {
-  const { data, error } = api.example.user.useQuery();
+  const { data, isLoading } = api.tweets.getTweets.useQuery();
 
-  if (error && !data) {
-    return <div>{error.message}</div>;
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+
+  if (!data?.tweets) {
+    return <div>no tweet here</div>;
   }
 
   return (
@@ -21,8 +25,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-200">
-        {data?.data?.map((user: any) => {
-          return <p key={user}>{user.email}</p>;
+        {data.tweets.map((tweet: any) => {
+          return <div key={tweet.id}>{tweet.content}</div>;
         })}
       </main>
     </>
