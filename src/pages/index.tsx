@@ -5,6 +5,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 
 import { api } from "@/utils/api";
+import Image from "next/image";
 
 const Home: NextPage = () => {
   const { data, isLoading } = api.tweets.getTweets.useQuery();
@@ -26,7 +27,13 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-200">
         {data.tweets.map((tweet: any) => {
-          return <div key={tweet.id}>{tweet.content}</div>;
+          return (
+            <Tweet
+              content={tweet.content}
+              author={tweet.author}
+              key={tweet.id}
+            />
+          );
         })}
       </main>
     </>
@@ -34,3 +41,21 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+function Tweet(props: any) {
+  return (
+    <div className=" my-2 flex  w-96 items-center justify-start rounded-xl bg-white">
+      <Image
+        src={"https://placekitten.com/250/250"}
+        height={250}
+        width={250}
+        alt=""
+        className="h-24 w-24 p-2 rounded-full"
+      />
+      <div className="flex flex-col p-2">
+        <p className="text-slate-400">@{props.author}</p>
+        <p className="">{props.content}</p>
+      </div>
+    </div>
+  );
+}
